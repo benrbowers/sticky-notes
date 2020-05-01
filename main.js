@@ -123,16 +123,25 @@ function swapNotes(note1, note2) {
     let content1 = note1.children[1].value;
     let id1 = note1.id
     let height1 = note1.children[1].style.height;
+    let color1 = note1.style.backgroundColor;
 
     note1.children[0].value = note2.children[0].value;
     note1.children[1].value = note2.children[1].value;
     note1.children[1].style.height = note2.children[1].style.height;
     note1.id = note2.id
+    note1.style.backgroundColor = note2.style.backgroundColor;
+    note1.children[0].style.backgroundColor = note2.style.backgroundColor;
+    note1.children[1].style.backgroundColor = note2.style.backgroundColor;
+    
+    
 
     note2.children[0].value = title1;
     note2.children[1].value = content1;
     note2.children[1].style.height = height1;
     note2.id = id1;
+    note2.style.backgroundColor = color1;
+    note2.children[0].style.backgroundColor = color1;
+    note2.children[1].style.backgroundColor = color1;
 }
 
 function copyNote(originalNote) {
@@ -141,7 +150,12 @@ function copyNote(originalNote) {
     noteCopy.innerHTML = originalNote.innerHTML;
     noteCopy.children[0].value = originalNote.children[0].value;
     noteCopy.children[1].value = originalNote.children[1].value;
-    noteCopy.id = originalNote.id;
+
+    let color = originalNote.style.backgroundColor;
+
+    noteCopy.style.backgroundColor = color;
+    noteCopy.children[0].style.backgroundColor = color;
+    noteCopy.children[1].style.backgroundColor = color;
 
     return noteCopy;
 }
