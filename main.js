@@ -1,5 +1,6 @@
 document.onmousemove = snapNote;
 document.onmouseup = placeNote;
+document.onmousedown = clearMenus;
 
 let notesCount = 0;
 function addNote() {
@@ -14,7 +15,6 @@ function addNote() {
     titleInput.type = 'text';
     titleInput.placeholder = 'Title';
     titleInput.className = 'note-title';
-    titleInput.value = notesCount;
     note.appendChild(titleInput);
 
     let textBox = document.createElement('textarea');
@@ -24,6 +24,11 @@ function addNote() {
     note.appendChild(textBox);
 
     let optionButton = document.createElement('button');
+    optionButton.className = 'option-button';
+    optionButton.textContent = '...';
+    optionButton.onmousedown = colorSelect;
+    note.appendChild(optionButton);
+
 
     note.id = 'note' + notesCount;
 
@@ -148,5 +153,68 @@ function keyDown() {
 function checkOverflow(textBox) {
     while (textBox.scrollHeight > textBox.clientHeight) {
         textBox.style.height = (textBox.clientHeight + 18) + 'px';
+    }
+}
+
+function colorSelect() {
+    console.log('option button pressed');
+
+    let selectors = this.parentNode.getElementsByClassName('color-selector');
+
+    if (selectors.length > 0) {
+        selectors[0].remove();
+    } else {
+        this.id = 'pressedOnce';
+
+        let colorPanel = document.createElement('div');
+        colorPanel.className = "color-selector";
+        
+        let colors = [
+            'lightgoldenrodyellow',
+            'lightblue',
+            'lightgreen',
+            'lightpink',
+            'lightcoral',
+            'lightskyblue',
+            'lightsalmon',
+            'plum',
+            'lightseagreen'
+        ];
+    
+        colors.forEach(color => {
+            let colorOption = document.createElement('button');
+            colorOption.className = "color-option";
+            colorOption.style.backgroundColor = color;
+            colorOption.onclick = setColor;
+            colorPanel.appendChild(colorOption);
+        });
+    
+        this.parentNode.appendChild(colorPanel);
+    }
+}
+
+function setColor() {
+    console.log('color button pressed');
+    let note = this.parentNode.parentNode;
+    let newColor = this.style.backgroundColor;
+    
+    note.style.backgroundColor = newColor;
+    note.children[0].style.backgroundColor = newColor;
+    note.children[1].style.backgroundColor = newColor;
+}
+
+function clearMenus(event) {
+    let colorSelectors = document.getElementsByClassName('color-selector');
+    
+    for (let i = 0; i < colorSelectors.length; i++){
+        let rect = colorSelectors[i].getBoundingClientRect();
+        
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
+            if (colorSelectors[i].id == 'active') {
+                colorSelectors[i].remove();
+            } else {
+                colorSelectors[i].id = 'active';
+            }
+        }
     }
 }
