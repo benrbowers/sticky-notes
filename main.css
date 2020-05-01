@@ -1,0 +1,85 @@
+* {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: lightgray;
+    padding-top: 100px;
+    margin: 0px;
+}
+
+.main {
+    position: relative;
+}
+
+.header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: gray;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+ .add-button{
+     position: fixed;
+     bottom: 5vw;
+     left: 5vw;
+     border: none;
+     height: 100px;
+     width: 100px;
+     border-radius: 100px;
+     background-color: orange;
+     font-size: 48px;
+     color: white;
+ }
+
+ .add-button:active {
+     bottom: 4.5vw;
+ }
+
+ .note {
+     width: 18%;
+     display: inline-block;
+     background-color:lightblue;
+     border-radius: 15px;
+     text-align: center;
+     vertical-align: top;
+     margin: 1vw;
+     padding-bottom: 16px;
+ }
+
+ .note-title {
+     width: 90%;
+     display: inline-block;
+     background-color: lightblue;
+     text-align: center;
+     font-size: 24px;
+     border: none;
+ }
+
+ .note-content {
+     width: 90%;
+     height: 100px;
+     background-color: lightblue;
+     display: inline-block;
+     resize: none;
+     border: none;
+     font-size: 16px;
+ }
+
+ @media screen and (max-width: 1280px) {
+     .note {
+         width: 31%;
+     }
+ }
+
+ @media screen and (max-width: 640px) {
+    .note {
+        width: 48%;
+    }
+}
