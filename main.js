@@ -157,6 +157,8 @@ function copyNote(originalNote) {
     noteCopy.children[0].style.backgroundColor = color;
     noteCopy.children[1].style.backgroundColor = color;
 
+    noteCopy.style.animationName = 'none';
+
     return noteCopy;
 }
 
@@ -173,14 +175,13 @@ function checkOverflow(textBox) {
 function colorSelect() {
     console.log('option button pressed');
 
-    let selectors = this.parentNode.getElementsByClassName('color-selector');
+    let selectors = document.getElementsByClassName('color-selector');
 
-    if (selectors.length > 0) {
-        selectors[0].remove();
-    } else {
-        this.id = 'pressedOnce';
+    for (let i = 0; i < selectors.length; i++) {
+        selectors[i].remove();
+    }
 
-        let colorPanel = document.createElement('div');
+    let colorPanel = document.createElement('div');
         colorPanel.className = "color-selector";
         
         let colors = [
@@ -204,7 +205,6 @@ function colorSelect() {
         });
     
         this.parentNode.appendChild(colorPanel);
-    }
 }
 
 function setColor() {
@@ -218,6 +218,7 @@ function setColor() {
 }
 
 function clearMenus(event) {
+    console.log('clear menus');
     let colorSelectors = document.getElementsByClassName('color-selector');
     
     for (let i = 0; i < colorSelectors.length; i++){
