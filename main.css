@@ -101,7 +101,7 @@ body {
     bottom: 15px;
  }
 
- .color-selector {
+ .note-menu {
      position: absolute;
      top: -15px;
      right: 15px;
@@ -132,6 +132,12 @@ body {
  .color-option:active {
      position: relative;
      bottom: 5px;
+ }
+
+ .delete-note {
+     float: right;
+     height: 24px;
+     background-image: url('delete-24px-red.svg');
  }
 
  @media screen and (max-width: 1280px) {

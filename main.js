@@ -26,7 +26,7 @@ function addNote() {
     let optionButton = document.createElement('button');
     optionButton.className = 'option-button';
     optionButton.textContent = '...';
-    optionButton.onmousedown = colorSelect;
+    optionButton.onmousedown = noteMenu;
     note.appendChild(optionButton);
 
 
@@ -172,17 +172,20 @@ function checkOverflow(textBox) {
     }
 }
 
-function colorSelect() {
+function noteMenu() {
     console.log('option button pressed');
 
-    let selectors = document.getElementsByClassName('color-selector');
+    let menus = document.getElementsByClassName('note-menu');
 
-    for (let i = 0; i < selectors.length; i++) {
-        selectors[i].remove();
+    for (let i = 0; i < menus.length; i++) {
+        menus[i].remove();
     }
 
-    let colorPanel = document.createElement('div');
-        colorPanel.className = "color-selector";
+    if (this.id == 'pressedOnce') {
+        this.id = 'notPressed';
+    } else {
+        let noteMenu = document.createElement('div');
+        noteMenu.className = "note-menu";
         
         let colors = [
             'lightgoldenrodyellow',
@@ -201,10 +204,16 @@ function colorSelect() {
             colorOption.className = "color-option";
             colorOption.style.backgroundColor = color;
             colorOption.onclick = setColor;
-            colorPanel.appendChild(colorOption);
+            noteMenu.appendChild(colorOption);
         });
+
+        let deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-note';
+        noteMenu.appendChild(deleteButton);
     
-        this.parentNode.appendChild(colorPanel);
+        this.parentNode.appendChild(noteMenu);
+        this.id = 'pressedOnce';
+    }
 }
 
 function setColor() {
