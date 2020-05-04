@@ -176,14 +176,13 @@ function noteMenu() {
     console.log('option button pressed');
 
     let menus = document.getElementsByClassName('note-menu');
+    let thisNoteHasMenu = (this.parentNode.getElementsByClassName('note-menu').length != 0);
 
     for (let i = 0; i < menus.length; i++) {
         menus[i].remove();
     }
 
-    if (this.id == 'pressedOnce') {
-        this.id = 'notPressed';
-    } else {
+    if (!thisNoteHasMenu) {
         let noteMenu = document.createElement('div');
         noteMenu.className = "note-menu";
         
@@ -207,12 +206,20 @@ function noteMenu() {
             noteMenu.appendChild(colorOption);
         });
 
-        let deleteButton = document.createElement('button');
+        let deleteButton = document.createElement('div');
         deleteButton.className = 'delete-note';
+        deleteButton.onclick = deleteNote;
+        let deleteText = document.createElement('p');
+        deleteText.textContent = 'Delete';
+        deleteText.className = 'delete-text';
+        deleteButton.appendChild(deleteText);
+        let deleteIcon = document.createElement('img');
+        deleteIcon.src = 'icons/delete-24px-red.svg';
+        deleteIcon.className = 'delete-icon';
+        deleteButton.appendChild(deleteIcon);
         noteMenu.appendChild(deleteButton);
     
         this.parentNode.appendChild(noteMenu);
-        this.id = 'pressedOnce';
     }
 }
 
@@ -228,17 +235,27 @@ function setColor() {
 
 function clearMenus(event) {
     console.log('clear menus');
-    let colorSelectors = document.getElementsByClassName('color-selector');
+    let noteMenus = document.getElementsByClassName('note-menu');
+
+    if (noteMenus.length == 0) {
+        console.log('no menus found');
+    }
     
-    for (let i = 0; i < colorSelectors.length; i++){
-        let rect = colorSelectors[i].getBoundingClientRect();
+    for (let i = 0; i < noteMenus.length; i++){
+        let rect = noteMenus[i].getBoundingClientRect();
         
         if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
-            if (colorSelectors[i].id == 'active') {
-                colorSelectors[i].remove();
+            if (noteMenus[i].id == 'active') {
+                console.log('menu is active');
+                noteMenus[i].remove();
             } else {
-                colorSelectors[i].id = 'active';
+                console.log('menu is not active');
+                noteMenus[i].id = 'active';
             }
         }
     }
+}
+
+function deleteNote() {
+    this.parentNode.parentNode.remove();
 }

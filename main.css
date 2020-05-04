@@ -1,5 +1,11 @@
 * {
     font-family: 'Courier New', Courier, monospace;
+    outline: none; /*To remove blue outline in chrome*/
+}
+
+/*To remove dotted outline in firefox*/
+button::-moz-focus-inner {
+    border: 0;
 }
 
 body {
@@ -38,6 +44,7 @@ body {
      font-size: 48px;
      color: white;
      z-index: 2;
+     cursor: pointer;
  }
 
  .add-button:active {
@@ -55,7 +62,7 @@ body {
 
  .note {
      position: relative;
-     width: 18%;
+     width: 17.9%;
      display: inline-block;
      background-color:lightgoldenrodyellow;
      border-radius: 15px;
@@ -94,6 +101,7 @@ body {
      background-color: rgba(0,0,0,0);
      font-size: 32px;
      color: gray;
+     cursor: pointer;
  }
 
   .option-button:active {
@@ -103,13 +111,12 @@ body {
 
  .note-menu {
      position: absolute;
-     top: -15px;
+     bottom: 45px;
      right: 15px;
      z-index: 3;
      background-color: lightgray;
      display: inline-block;
      border-radius: 15px;
-     width: 150px;
      width: 150px;
      padding: 0px;
      -moz-box-shadow: 2px 2px 4px 2px#777777; 
@@ -127,6 +134,7 @@ body {
      border-radius: 20px;
      border: 1px solid gray;
      margin: 10px;
+     cursor: pointer;
  }
 
  .color-option:active {
@@ -134,12 +142,30 @@ body {
      bottom: 5px;
  }
 
+ 
  .delete-note {
-     float: right;
-     height: 24px;
-     background-image: url('delete-24px-red.svg');
+     display: inline-block;
+     margin-bottom: 10px;
+     cursor: pointer;
+ }
+ .delete-note:active {
+     position: relative;
+     bottom: 5px;
  }
 
+ .delete-text {
+     margin: 0px;
+     color: #993333;
+     display: inline-block;
+     vertical-align: middle;
+ }
+
+ .delete-icon {
+     margin: 0px;
+     height: 24px;
+     display: inline-block;
+     vertical-align: middle;
+ }
  @media screen and (max-width: 1280px) {
      .note {
          width: 31%;
