@@ -39,8 +39,6 @@ function addNote() {
 
 let selectedNote = null;
 let noteCopy = {};
-let offsetX = 0;
-let offsetY = 0;
 let mouseDidMove = false;
 let currentSwap = null;
 
@@ -67,49 +65,43 @@ function placeNote(event) {
     }
 }
 
+let moveCount = 0;
 function snapNote(event) {
     if (selectedNote !== null) {
-        if (!mouseDidMove) {
+        let mouseMovement = Math.sqrt((event.movementX ** 2) + (event.movementY ** 2)); 
+        if (!mouseDidMove && mouseMovement > 4) {
+            console.log('mouse moved');
             selectedNote.style.visibility = 'hidden';
+
+            currentSwap = selectedNote;
 
             noteCopy = copyNote(selectedNote);
             noteCopy.style.position = 'fixed';
+            
             document.body.appendChild(noteCopy);
+            noteCopy.style.top = (event.clientY - noteCopy.offsetHeight/2) + 'px';
+            noteCopy.style.left = (event.clientX - noteCopy.offsetWidth/2) + 'px';
 
             mouseDidMove = true;
-        }
-        noteCopy.style.top = (event.clientY - noteCopy.offsetHeight/2) + 'px';
-        noteCopy.style.left = (event.clientX - noteCopy.offsetWidth/2) + 'px';
+        } else {
+            noteCopy.style.top = (event.clientY - noteCopy.offsetHeight/2) + 'px';
+            noteCopy.style.left = (event.clientX - noteCopy.offsetWidth/2) + 'px';
 
-        let notes = document.getElementsByClassName('note');
-        for(let i = 0; i < notes.length; i++) {
-            
-            let rect = notes[i].getBoundingClientRect();
-            if (currentSwap === null) {
-                if (notes[i].id !== noteCopy.id) {
-                    if (event.clientX > rect.left && event.clientX < rect.right && event.clientY > rect.top && event.clientY < rect.bottom) {
-                        console.log('Selected: ' + noteCopy.id);
-                        console.log('Swap with: ' + notes[i].id);
-                        swapNotes(notes[i], selectedNote);
-                        currentSwap = notes[i];
-
-                        selectedNote.style.visibility = 'visible';
-                        checkOverflow(selectedNote.children[1]);
-                        currentSwap.style.visibility = 'hidden';
-                    }
-                }
-            } else {
+            let notes = document.getElementsByClassName('note');
+            for(let i = 0; i < notes.length; i++) {
+                
+                let rect = notes[i].getBoundingClientRect();
                 if (notes[i].id !== noteCopy.id && notes[i].id !== currentSwap.id) {
                     if (event.clientX > rect.left && event.clientX < rect.right && event.clientY > rect.top && event.clientY < rect.bottom) {
                         currentSwap.style.visibility = 'visible';
+                        checkOverflow(currentSwap.children[1]);
                         console.log('Selected: ' + noteCopy.id);
                         console.log('Swap with: ' + notes[i].id);
-                        
-                        swapNotes(notes[i], currentSwap);
-                        currentSwap = notes[i];
 
-                        selectedNote.style.visibility = 'visible';
-                        checkOverflow(selectedNote.children[1]);
+                        swapNotes(selectedNote, currentSwap);
+                        currentSwap = notes[i];
+                        swapNotes(selectedNote, currentSwap);
+                        
                         currentSwap.style.visibility = 'hidden';
                     }
                 }
@@ -150,6 +142,7 @@ function copyNote(originalNote) {
     noteCopy.innerHTML = originalNote.innerHTML;
     noteCopy.children[0].value = originalNote.children[0].value;
     noteCopy.children[1].value = originalNote.children[1].value;
+    noteCopy.id = originalNote.id;
 
     let color = originalNote.style.backgroundColor;
 
@@ -257,5 +250,73 @@ function clearMenus(event) {
 }
 
 function deleteNote() {
-    this.parentNode.parentNode.remove();
+    let thisNote = this.parentNode.parentNode;
+    let thisRect = thisNote.getBoundingClientRect();
+
+    let notes = document.getElementsByClassName('note');
+    let oldRects = [];
+    
+    for (let i = 0; i < notes.length; i++) {
+        let rect = notes[i].getBoundingClientRect();
+
+        if (rect.left != thisRect.left || rect.top != thisRect.top ) {
+            oldRects.push(rect);
+        }
+    }
+
+    thisNote.remove();
+
+    animateReorder(oldRects, 800);
+}
+
+/**
+ * Takes the old positions of elements and animates them to their new positions
+ * @param {array} oldRects
+ * @param {number} duration
+ */
+function animateReorder(oldRects, duration) {
+    let notes = document.getElementsByClassName('note');
+    let newRects = [];
+
+    for (let i = 0; i < notes.length; i++) {
+        let newRect = notes[i].getBoundingClientRect();
+        newRects.push(newRect);
+    }
+
+    for (let i = 0; i < notes.length; i++) {
+        let offset = parseFloat(window.getComputedStyle(notes[i]).marginLeft);
+
+        notes[i].style.position = 'fixed';
+        notes[i].style.left = (oldRects[i].left - offset) + 'px';
+        notes[i].style.top = (oldRects[i].top - offset) + 'px';
+
+    }
+
+    let timePassed = 0;
+    let lastFrame = Date.now();
+    function animateFrame() {
+        
+        let deltaT = Date.now() - lastFrame;
+        timePassed += deltaT;
+        lastFrame = Date.now();
+        for (let i = 0; i < notes.length; i++) {
+            let deltaX = (newRects[i].left - oldRects[i].left) * deltaT / duration;
+            let deltaY = (newRects[i].top - oldRects[i].top) * deltaT / duration;
+
+            notes[i].style.left = (parseFloat(notes[i].style.left) + deltaX) + 'px';
+            notes[i].style.top = (parseFloat(notes[i].style.top) + deltaY) + 'px';
+        }
+
+        if (timePassed < duration) {
+            requestAnimationFrame(animateFrame);
+        } else {
+            for (let i = 0; i < notes.length; i++) {
+                notes[i].style.position = 'relative';
+                notes[i].style.left = '0px';
+                notes[i].style.top = '0px';
+            }
+        }
+    }
+
+    animateFrame();
 }
