@@ -201,7 +201,7 @@ function noteMenu() {
 
         let deleteButton = document.createElement('div');
         deleteButton.className = 'delete-note';
-        deleteButton.onclick = deleteNote;
+        deleteButton.onmouseup = deleteNote;
         let deleteText = document.createElement('p');
         deleteText.textContent = 'Delete';
         deleteText.className = 'delete-text';
