@@ -266,7 +266,7 @@ function deleteNote() {
 
     thisNote.remove();
 
-    animateReorder(oldRects, 800);
+    animateReorder(oldRects, 600);
 }
 
 /**
