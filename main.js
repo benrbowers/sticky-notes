@@ -88,7 +88,7 @@ function snapNote(event) {
 
             mouseDidMove = true;
 
-        } else {
+        } else if (mouseDidMove) {
             // Snap note to the mouse position
             noteCopy.style.top = (event.clientY - noteCopy.offsetHeight/2) + 'px';
             noteCopy.style.left = (event.clientX - noteCopy.offsetWidth/2) + 'px';
@@ -100,7 +100,7 @@ function snapNote(event) {
                 let rect = notes[i].getBoundingClientRect(); // Get the bounding rectangle to know the positon of the note
 
                 // Swap the notes if appropriate
-                if (notes[i].id !== noteCopy.id && notes[i].id !== currentSwap.id) { // Make sure the note is a different note
+                if (currentSwap !== null && notes[i].id !== noteCopy.id && notes[i].id !== currentSwap.id) { // Make sure the note is a different note
                     if (event.clientX > rect.left && event.clientX < rect.right 
                         && event.clientY > rect.top && event.clientY < rect.bottom) { // Check if the mouse is over this note
 
