@@ -253,7 +253,7 @@ function noteMenu() {
             let colorOption = document.createElement('button');
             colorOption.className = "color-option";
             colorOption.style.backgroundColor = color;
-            colorOption.onclick = setColor;
+            colorOption.onmousedown = setColor;
             noteMenu.appendChild(colorOption);
         });
 
