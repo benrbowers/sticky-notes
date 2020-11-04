@@ -266,7 +266,7 @@ function noteMenu() {
         deleteText.className = 'delete-text';
         deleteButton.appendChild(deleteText);
         let deleteIcon = document.createElement('img');
-        deleteIcon.src = 'icons/delete-24px-red.svg';
+        deleteIcon.src = 'images/delete-24px-red.svg';
         deleteIcon.className = 'delete-icon';
         deleteButton.appendChild(deleteIcon);
         noteMenu.appendChild(deleteButton);
