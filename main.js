@@ -1,5 +1,7 @@
 document.onmousemove = snapNote; //Snap selected note to the mouse whenever the mouse moves
-document.onmouseup = placeNote; //When the mouse comes up, place the selected note where the user chose
+document.ontouchmove = snapNoteTouch;
+document.onmouseup = placeNote;
+document.ontouchend = placeNote; //When the mouse comes up, place the selected note where the user chose
 document.onmousedown = clearMenus; //Clear menus when the mouse is clicked to the side
 
 let notesCount = 0; //Used to give a unique id to each note
@@ -15,6 +17,7 @@ function addNote() {
     //Create note container
     let note = document.createElement('div');
     note.onmousedown = selectNote;
+    note.ontouchstart = selectNote;
     note.className = 'note';
     
     //Create text input for note title
@@ -36,6 +39,7 @@ function addNote() {
     optionButton.className = 'option-button';
     optionButton.textContent = '...';
     optionButton.onmousedown = noteMenu;
+    optionButton.ontouchstart = noteMenu;
     note.appendChild(optionButton);
 
 
@@ -121,6 +125,37 @@ function snapNote(event) {
         }//End else
     }//End if
 }//End snapNote
+
+function snapNoteTouch() {
+    noteCopy.style.top = (event.clientY - noteCopy.offsetHeight/2) + 'px';
+    noteCopy.style.left = (event.clientX - noteCopy.offsetWidth/2) + 'px';
+
+    let notes = document.getElementsByClassName('note'); // Get all the notes in the document
+
+    for(let i = 0; i < notes.length; i++) { // Loop through the notes
+        
+        let rect = notes[i].getBoundingClientRect(); // Get the bounding rectangle to know the positon of the note
+
+        // Swap the notes if appropriate
+        if (currentSwap !== null && notes[i].id !== noteCopy.id && notes[i].id !== currentSwap.id) { // Make sure the note is a different note
+            if (event.clientX > rect.left && event.clientX < rect.right 
+                && event.clientY > rect.top && event.clientY < rect.bottom) { // Check if the mouse is over this note
+
+                console.log('Selected: ' + noteCopy.id);
+                console.log('Swap with: ' + notes[i].id);
+
+                currentSwap.style.visibility = 'visible'; // Make the old swap visible
+                checkOverflow(currentSwap.children[1]); // Resize the text box if necessary
+
+                swapNotes(selectedNote, currentSwap); //Undo previous swap
+                currentSwap = notes[i]; //Update currentSwap
+                swapNotes(selectedNote, currentSwap); //Perform new swap
+                
+                currentSwap.style.visibility = 'hidden'; //Hide the new swap
+            }//End if
+        }//End if
+    }//End for
+}//End snapNoteTouch
 
 /**
  * placeNote places the selected note down in the proper location.
