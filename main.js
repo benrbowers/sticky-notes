@@ -323,7 +323,7 @@ function noteMenu() {
         // Create a delete button
         let deleteButton = document.createElement('div');
         deleteButton.className = 'delete-note';
-        deleteButton.onmouseup = deleteNote;
+        deleteButton.onmousedown = (() => {setTimeout(deleteNote.bind(deleteButton), 155);}); //Add a delay to let user see button press
         let deleteText = document.createElement('p');
         deleteText.textContent = 'Delete';
         deleteText.className = 'delete-text';
@@ -399,7 +399,7 @@ function deleteNote() {
 
     thisNote.remove();
 
-    animateReorder(oldRects, 600); // Using the old positions, animate the reording of the notes over the specified time
+    animateReorder(oldRects, 400); // Using the old positions, animate the reording of the notes over the specified time
 }
 
 /**
