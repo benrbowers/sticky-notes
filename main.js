@@ -103,21 +103,33 @@ function snapNote(event) {
                 let rect = notes[i].getBoundingClientRect(); // Get the bounding rectangle to know the positon of the note
 
                 // Swap the notes if appropriate
-                if (currentSwap !== null && notes[i].id !== noteCopy.id && notes[i].id !== currentSwap.id) { // Make sure the note is a different note
+                if (currentSwap !== null && !noteCopy.id.includes(notes[i].id) && notes[i].id !== currentSwap.id) { // Make sure the note is a different note
                     if (event.clientX > rect.left && event.clientX < rect.right 
                         && event.clientY > rect.top && event.clientY < rect.bottom) { // Check if the mouse is over this note
+                        if (notes[i].style.position !== 'fixed') { // Check if note is being animated
+                            console.log('Selected: ' + noteCopy.id);
+                            console.log('Swap with: ' + notes[i].id);
 
-                        console.log('Selected: ' + noteCopy.id);
-                        console.log('Swap with: ' + notes[i].id);
+                            // Gather old notes positions for animating swap
+                            let oldRects = new Map(); //Map for old note positions for animating
+                            for (let i = 0; i < notes.length; i++) {
+                                if (!notes[i].id.includes('copy')) {
+                                    let oldRect = notes[i].getBoundingClientRect();
+                                    oldRects.set(notes[i].id, oldRect);
+                                }
+                            }
 
-                        currentSwap.style.visibility = 'visible'; // Make the old swap visible
-                        checkOverflow(currentSwap.children[1]); // Resize the text box if necessary
+                            currentSwap.style.visibility = 'visible'; // Make the old swap visible
+                            checkOverflow(currentSwap.children[1]); // Resize the text box if necessary
 
-                        swapNotes(selectedNote, currentSwap); //Undo previous swap
-                        currentSwap = notes[i]; //Update currentSwap
-                        swapNotes(selectedNote, currentSwap); //Perform new swap
-                        
-                        currentSwap.style.visibility = 'hidden'; //Hide the new swap
+                            swapNotes(selectedNote, currentSwap); //Undo previous swap
+                            currentSwap = notes[i]; //Update currentSwap
+                            swapNotes(selectedNote, currentSwap); //Perform new swap
+                            
+                            currentSwap.style.visibility = 'hidden'; //Hide the new swap
+
+                            animateReorder(oldRects, 300);
+                        }
                     }//End if
                 }//End if
             }//End for
@@ -163,21 +175,33 @@ function snapNoteTouch(event) {
                 let rect = notes[i].getBoundingClientRect(); // Get the bounding rectangle to know the positon of the note
 
                 // Swap the notes if appropriate
-                if (currentSwap !== null && notes[i].id !== noteCopy.id && notes[i].id !== currentSwap.id) { // Make sure the note is a different note
+                if (currentSwap !== null && !noteCopy.id.includes(notes[i].id) && notes[i].id !== currentSwap.id) { // Make sure the note is a different note
                     if (event.touches[0].clientX > rect.left && event.touches[0].clientX < rect.right 
                         && event.touches[0].clientY > rect.top && event.touches[0].clientY < rect.bottom) { // Check if the mouse is over this note
+                        if (notes[i].style.position !== 'fixed') {
+                            console.log('Selected: ' + noteCopy.id);
+                            console.log('Swap with: ' + notes[i].id);
 
-                        console.log('Selected: ' + noteCopy.id);
-                        console.log('Swap with: ' + notes[i].id);
+                            // Gather old notes positions for animating swap
+                            let oldRects = new Map(); //Map for old note positions for animating
+                            for (let i = 0; i < notes.length; i++) {
+                                if (!notes[i].id.includes('copy')) {
+                                    let oldRect = notes[i].getBoundingClientRect();
+                                    oldRects.set(notes[i].id, oldRect);
+                                }
+                            }
 
-                        currentSwap.style.visibility = 'visible'; // Make the old swap visible
-                        checkOverflow(currentSwap.children[1]); // Resize the text box if necessary
+                            currentSwap.style.visibility = 'visible'; // Make the old swap visible
+                            checkOverflow(currentSwap.children[1]); // Resize the text box if necessary
 
-                        swapNotes(selectedNote, currentSwap); //Undo previous swap
-                        currentSwap = notes[i]; //Update currentSwap
-                        swapNotes(selectedNote, currentSwap); //Perform new swap
-                        
-                        currentSwap.style.visibility = 'hidden'; //Hide the new swap
+                            swapNotes(selectedNote, currentSwap); //Undo previous swap
+                            currentSwap = notes[i]; //Update currentSwap
+                            swapNotes(selectedNote, currentSwap); //Perform new swap
+                            
+                            currentSwap.style.visibility = 'hidden'; //Hide the new swap
+
+                            animateReorder(oldRects, 300);
+                        }
                     }//End if
                 }//End if
             }//End for
@@ -251,7 +275,7 @@ function copyNote(originalNote) {
     noteCopy.innerHTML = originalNote.innerHTML;
     noteCopy.children[0].value = originalNote.children[0].value;
     noteCopy.children[1].value = originalNote.children[1].value;
-    noteCopy.id = originalNote.id;
+    noteCopy.id = originalNote.id + 'copy';
 
     let color = originalNote.style.backgroundColor;
 
@@ -370,7 +394,6 @@ function clearMenus(event) {
         if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
             if (noteMenus[i].id == 'active') { //Remove the note only on a second click to account for clicking the option button
                 noteMenus[i].remove();
-                console.log('yeetus deletus');
             } else {
                 noteMenus[i].id = 'active';
             }//End else
@@ -383,48 +406,47 @@ function clearMenus(event) {
  */
 function deleteNote() {
     let thisNote = this.parentNode.parentNode;
-    let thisRect = thisNote.getBoundingClientRect();
 
     let notes = document.getElementsByClassName('note');
-    let oldRects = []; // Initialize an array for the old note positions
+    let oldRects = new Map(); // Initialize an array for the old note positions
     
     // Collect all the current note positions
     for (let i = 0; i < notes.length; i++) {
         let rect = notes[i].getBoundingClientRect();
-
-        if (rect.left != thisRect.left || rect.top != thisRect.top ) {
-            oldRects.push(rect);
-        }
+        oldRects.set(notes[i].id, rect);
     }
 
     thisNote.remove();
 
-    animateReorder(oldRects, 400); // Using the old positions, animate the reording of the notes over the specified time
+    animateReorder(oldRects, 300); // Using the old positions, animate the reording of the notes over the specified time
 }
 
 /**
  * Takes the old positions of elements and animates them to their new positions
- * @param {array} oldRects
+ * @param {Map} oldRects dictionary of note id's and their rects
  * @param {number} duration
  */
 function animateReorder(oldRects, duration) {
+    console.log(oldRects);
     let notes = document.getElementsByClassName('note'); // Get all the notes
-    let newRects = []; // Initialize array for collecting new positions
+    let newRects = new Map(); // Initialize array for collecting new positions
 
     // Collect the new positions
     for (let i = 0; i < notes.length; i++) {
         let newRect = notes[i].getBoundingClientRect();
-        newRects.push(newRect);
+        newRects.set(notes[i].id, newRect);
     }
 
     // Set initial positions
     for (let i = 0; i < notes.length; i++) {
-        let offsetX = parseFloat(window.getComputedStyle(notes[i]).marginLeft);
-        let offsetY = parseFloat(window.getComputedStyle(notes[i]).marginTop);
+        if (oldRects.has(notes[i].id) && newRects.has(notes[i].id)) {
+            let offsetX = parseFloat(window.getComputedStyle(notes[i]).marginLeft);
+            let offsetY = parseFloat(window.getComputedStyle(notes[i]).marginTop);
 
-        notes[i].style.position = 'fixed';
-        notes[i].style.left = (oldRects[i].left - offsetX) + 'px';
-        notes[i].style.top = (oldRects[i].top - offsetY) + 'px';
+            notes[i].style.position = 'fixed';
+            notes[i].style.left = (oldRects.get(notes[i].id).left - offsetX) + 'px';
+            notes[i].style.top = (oldRects.get(notes[i].id).top - offsetY) + 'px';
+        }
     }
 
     let timePassed = 0; // Time passed since animation began, in ms
@@ -439,11 +461,13 @@ function animateReorder(oldRects, duration) {
 
         // Update the positions of the notes
         for (let i = 0; i < notes.length; i++) {
-            let deltaX = (newRects[i].left - oldRects[i].left) * deltaT / duration;
-            let deltaY = (newRects[i].top - oldRects[i].top) * deltaT / duration;
+            if (oldRects.has(notes[i].id) && newRects.has(notes[i].id)) {
+                let deltaX = (newRects.get(notes[i].id).left - oldRects.get(notes[i].id).left) * deltaT / duration;
+                let deltaY = (newRects.get(notes[i].id).top - oldRects.get(notes[i].id).top) * deltaT / duration;
 
-            notes[i].style.left = (parseFloat(notes[i].style.left) + deltaX) + 'px';
-            notes[i].style.top = (parseFloat(notes[i].style.top) + deltaY) + 'px';
+                notes[i].style.left = (parseFloat(notes[i].style.left) + deltaX) + 'px';
+                notes[i].style.top = (parseFloat(notes[i].style.top) + deltaY) + 'px';
+            }
         }
 
         // Check if the proper amount of time has passed
@@ -451,9 +475,11 @@ function animateReorder(oldRects, duration) {
             requestAnimationFrame(animateFrame);
         } else {
             for (let i = 0; i < notes.length; i++) {
-                notes[i].style.position = 'relative';
-                notes[i].style.left = '0px';
-                notes[i].style.top = '0px';
+                if (oldRects.has(notes[i].id) && newRects.has(notes[i].id)) {
+                    notes[i].style.position = 'relative';
+                    notes[i].style.left = '0px';
+                    notes[i].style.top = '0px';
+                }
             }
         }
     }
