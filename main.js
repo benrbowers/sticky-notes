@@ -1,7 +1,7 @@
 document.onmousemove = snapNote; //Snap selected note to the mouse whenever the mouse moves
-document.ontouchmove = snapNoteTouch;
-document.onmouseup = placeNote;
-document.ontouchend = placeNote; //When the mouse comes up, place the selected note where the user chose
+document.ontouchmove = snapNoteTouch; //Logic for snapping to touch is slightly different than mouse
+document.onmouseup = placeNote; //When the mouse comes up, place the selected note where the user chose
+document.ontouchend = placeNote; //When the touch is released, place the note
 document.onmousedown = clearMenus; //Clear menus when the mouse is clicked to the side
 
 let notesCount = 0; //Used to give a unique id to each note
@@ -126,7 +126,7 @@ function snapNote(event) {
 }//End snapNote
 
 /**
- * snapNote snaps the selected note to the mouse position and swaps
+ * snapNoteTouch snaps the selected note to the touch position and swaps
  * notes when the user hovers the selected note over another note.
  * @param {TouchEvent} event 
  */

@@ -10,22 +10,31 @@ button::-moz-focus-inner {
 
 body {
     background-color: lightgray;
-    padding: 100px 0.5vw 0px 1vw;
+    padding-left: 1vw;
     margin: 0px;
 }
 
+.spacer {
+    height: 125px;
+    margin-bottom: 1vw;
+}
+
 .header {
+    display: table;
     position: fixed;
     z-index: 2;
     top: 0px;
     left: 0px;
-    right: 0px;
+    width: 100%;
     background-color: rgba(128, 128, 128, 0.85);
     color: white;
     text-align: center;
-    margin: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    height: 125px;
+}
+
+.header h1 {
+    display: table-cell;
+    vertical-align: middle;
 }
 
  .add-button{
@@ -44,7 +53,7 @@ body {
  }
 
  .add-button:active {
-    bottom: 9vw;
+    transform: translate(0, -20px);
  }
 
  @keyframes fade-in {
@@ -58,20 +67,20 @@ body {
 
  .note {
      position: relative;
-     width: 17.9%;
+     width: 17.8%;
      display: inline-block;
      background-color:lightgoldenrodyellow;
      border-radius: 15px;
      text-align: center;
      vertical-align: top;
      margin: 1vw;
-     padding-bottom: 16px;
+     padding-bottom: 5px;
      animation-name: fade-in;
      animation-duration: 0.6s;
 }
 
  .note-title {
-     width: 90%;
+     width: 85%;
      display: inline-block;
      background-color: lightgoldenrodyellow;
      text-align: center;
@@ -92,7 +101,7 @@ body {
 
  .option-button {
      float: right;
-     margin-right: 10px;
+     margin-right: 3px;
      border: none;
      background-color: rgba(0,0,0,0);
      font-size: 32px;
@@ -102,7 +111,7 @@ body {
 
   .option-button:active {
     position: relative;
-    bottom: 15px;
+    bottom: 10px;
  }
 
  .note-menu {
@@ -115,7 +124,7 @@ body {
      border-radius: 15px;
      width: 160px;
      padding: 5px 5px 0px 5px;
-     -moz-box-shadow: 2px 2px 4px 2px#777777; 
+     -moz-box-shadow: 2px 2px 6px 2px#777777; 
 	 -webkit-box-shadow: 2px 2px 6px 2px #777777; 
      box-shadow: 2px 2px 6px 2px #777777;
      text-align: center;
@@ -162,14 +171,49 @@ body {
      display: inline-block;
      vertical-align: middle;
  }
- @media screen and (max-width: 1280px) {
+
+ @media screen and (max-width: 1450px) {
+     .note {
+         width: 22.75%;
+     }
+ }
+
+ @media screen and (max-width: 1050px) {
      .note {
          width: 31%;
      }
  }
 
- @media screen and (max-width: 640px) {
+ @media screen and (max-width: 650px) {
     .note {
-        width: 47.9%;
+        width: 47.5%;
+    }
+
+    .note-menu {
+        width: 140px;
+        padding: 3px;
+    }
+
+    .color-option {
+        margin: 3px;
+    }
+
+    .note-title {
+        font-size: 16px;
+        font-weight: bold;
+        width: 80%;
+    }
+
+    .add-button {
+        height: 100px;
+        width: 100px;
+    }
+
+    .add-button:active {
+        transform: translate(0, -10px);
+    }
+
+    .option-button {
+        font-size: 24px;
     }
 }
