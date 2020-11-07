@@ -437,15 +437,18 @@ function animateReorder(oldRects, duration) {
         newRects.set(notes[i].id, newRect);
     }
 
+
     // Set initial positions
+    let offsetX = parseFloat(window.getComputedStyle(notes[0]).marginLeft);
+    let offsetY = parseFloat(window.getComputedStyle(notes[0]).marginTop);
+    let width = parseFloat(window.getComputedStyle(notes[0]).width);
     for (let i = 0; i < notes.length; i++) {
         if (oldRects.has(notes[i].id) && newRects.has(notes[i].id)) {
-            let offsetX = parseFloat(window.getComputedStyle(notes[i]).marginLeft);
-            let offsetY = parseFloat(window.getComputedStyle(notes[i]).marginTop);
 
             notes[i].style.position = 'fixed';
             notes[i].style.left = (oldRects.get(notes[i].id).left - offsetX) + 'px';
             notes[i].style.top = (oldRects.get(notes[i].id).top - offsetY) + 'px';
+            notes[i].style.width = width + 'px';
         }
     }
 
@@ -479,10 +482,11 @@ function animateReorder(oldRects, duration) {
                     notes[i].style.position = 'relative';
                     notes[i].style.left = '0px';
                     notes[i].style.top = '0px';
-                }
-            }
-        }
-    }
+                    notes[i].style.width = "";
+                }//End if
+            }//End for
+        }//End else
+    }//End animateFrame
 
     animateFrame();
 }
