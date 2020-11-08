@@ -1,11 +1,15 @@
 * {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: Arial, Helvetica, sans-serif;
     outline: none; /*To remove blue outline in chrome*/
 }
 
 /*To remove dotted outline in firefox*/
 button::-moz-focus-inner {
     border: 0;
+}
+
+button:focus {
+    outline: 0;
 }
 
 body {
@@ -15,7 +19,7 @@ body {
 }
 
 .spacer {
-    height: 125px;
+    height: 115px;
     margin-bottom: 1vw;
 }
 
@@ -29,7 +33,7 @@ body {
     background-color: rgba(128, 128, 128, 0.85);
     color: white;
     text-align: center;
-    height: 125px;
+    height: 115px;
 }
 
 .header h1 {
@@ -46,7 +50,7 @@ body {
      width: 125px;
      border-radius: 100px;
      background-color: orange;
-     font-size: 64px;
+     font-size: 80px;
      color: white;
      z-index: 2;
      cursor: pointer;
@@ -81,11 +85,16 @@ body {
 
  .note-title {
      width: 85%;
+     height: 1.3em;
      display: inline-block;
      background-color: lightgoldenrodyellow;
      text-align: center;
      font-size: 24px;
+     font-weight: 600;
      border: none;
+     resize: none;
+     overflow: hidden;
+     margin: 0;
  }
 
  .note-content {
@@ -97,21 +106,24 @@ body {
      overflow: hidden;
      border: none;
      font-size: 16px;
+     margin: 0;
  }
 
  .option-button {
      float: right;
-     margin-right: 3px;
+     position: relative;
+     bottom: 20px;
+     margin-right: 10px;
+     height: 30px;
      border: none;
      background-color: rgba(0,0,0,0);
-     font-size: 32px;
+     font-size: 42px;
      color: gray;
      cursor: pointer;
  }
 
   .option-button:active {
-    position: relative;
-    bottom: 10px;
+    bottom: 30px;
  }
 
  .note-menu {
@@ -198,15 +210,28 @@ body {
         margin: 3px;
     }
 
+    .header {
+        height: 100px;
+    }
+
+    .spacer {
+        height: 100px;
+    }
+
     .note-title {
-        font-size: 16px;
-        font-weight: bold;
+        font-size: 18px;
+        font-weight: 600;
         width: 80%;
     }
 
     .add-button {
-        height: 100px;
-        width: 100px;
+        height: 90px;
+        width: 90px;
+        font-size: 64px;
+    }
+
+    .delete-note {
+        margin: 0;
     }
 
     .add-button:active {
@@ -214,6 +239,7 @@ body {
     }
 
     .option-button {
-        font-size: 24px;
+        font-size: 40px;
+        margin-right: 10px;
     }
 }
