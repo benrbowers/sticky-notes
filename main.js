@@ -21,10 +21,10 @@ function addNote() {
     note.className = 'note';
     
     //Create text input for note title
-    let titleInput = document.createElement('input');
-    titleInput.type = 'text';
+    let titleInput = document.createElement('textarea');
     titleInput.placeholder = 'Title';
     titleInput.className = 'note-title';
+    titleInput.onkeydown = keyDown;
     note.appendChild(titleInput);
 
     //Create text box for the content of the note
@@ -37,8 +37,9 @@ function addNote() {
     //Create the option button for the note
     let optionButton = document.createElement('button');
     optionButton.className = 'option-button';
-    optionButton.textContent = '...';
+    optionButton.textContent = '. . .';
     optionButton.onmousedown = noteMenu;
+    optionButton.ontouchstart = noteMenu;
     note.appendChild(optionButton);
 
 
@@ -300,8 +301,9 @@ function keyDown() {
  * @param {HTMLTextAreaElement} textBox 
  */
 function checkOverflow(textBox) {
+    textBox.style.height = "";
     while (textBox.scrollHeight > textBox.clientHeight) {
-        textBox.style.height = (textBox.clientHeight + 18) + 'px';
+        textBox.style.height = (textBox.clientHeight + 2) +'px';
     }
 }
 
@@ -314,51 +316,53 @@ function noteMenu() {
     let menus = document.getElementsByClassName('note-menu'); // Get all menus
     let thisNoteHasMenu = (this.parentNode.getElementsByClassName('note-menu').length != 0); //Whether this particular note has an active menu
 
-    //Remove existing menus
     for (let i = 0; i < menus.length; i++) {
         menus[i].remove();
     }
 
-    if (!thisNoteHasMenu) {
-        let noteMenu = document.createElement('div'); 
-        noteMenu.className = "note-menu";
-        
-        let colors = [ // Nine different note colors
-            'lightgoldenrodyellow',
-            'lightblue',
-            'lightgreen',
-            'lightpink',
-            'lightcoral',
-            'lightskyblue',
-            'lightsalmon',
-            'plum',
-            'lightseagreen'
-        ];
+    let noteMenu = document.createElement('div'); 
+    noteMenu.className = "note-menu";
     
-        // Create nine different color buttons
-        colors.forEach(color => {
-            let colorOption = document.createElement('button');
-            colorOption.className = "color-option";
-            colorOption.style.backgroundColor = color;
-            colorOption.onmousedown = setColor;
-            noteMenu.appendChild(colorOption);
-        });
+    let colors = [ // Nine different note colors
+        'lightgoldenrodyellow',
+        'lightblue',
+        'lightgreen',
+        'lightpink',
+        'lightcoral',
+        'lightskyblue',
+        'lightsalmon',
+        'plum',
+        'lightseagreen'
+    ];
 
-        // Create a delete button
-        let deleteButton = document.createElement('div');
-        deleteButton.className = 'delete-note';
-        deleteButton.onmousedown = (() => {setTimeout(deleteNote.bind(deleteButton), 155);}); //Add a delay to let user see button press
-        let deleteText = document.createElement('p');
-        deleteText.textContent = 'Delete';
-        deleteText.className = 'delete-text';
-        deleteButton.appendChild(deleteText);
-        let deleteIcon = document.createElement('img');
-        deleteIcon.src = 'images/delete-24px-red.svg';
-        deleteIcon.className = 'delete-icon';
-        deleteButton.appendChild(deleteIcon);
-        noteMenu.appendChild(deleteButton);
-    
-        this.parentNode.appendChild(noteMenu); // Add the menu to the note
+    // Create nine different color buttons
+    colors.forEach(color => {
+        let colorOption = document.createElement('button');
+        colorOption.className = "color-option";
+        colorOption.style.backgroundColor = color;
+        colorOption.onmousedown = setColor;
+        colorOption.ontouchstart = setColor;
+        noteMenu.appendChild(colorOption);
+    });
+
+    // Create a delete button
+    let deleteButton = document.createElement('div');
+    deleteButton.className = 'delete-note';
+    deleteButton.onmousedown = (() => {setTimeout(deleteNote.bind(deleteButton), 155);}); //Add a delay to let user see button press
+    let deleteText = document.createElement('p');
+    deleteText.textContent = 'Delete';
+    deleteText.className = 'delete-text';
+    deleteButton.appendChild(deleteText);
+    let deleteIcon = document.createElement('img');
+    deleteIcon.src = 'images/delete-24px-red.svg';
+    deleteIcon.className = 'delete-icon';
+    deleteButton.appendChild(deleteIcon);
+    noteMenu.appendChild(deleteButton);
+
+    this.parentNode.appendChild(noteMenu); // Add the menu to the note
+
+    if (!thisNoteHasMenu) {
+        
     }
 }
 
