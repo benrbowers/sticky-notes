@@ -1,3 +1,4 @@
 # sticky-notes
 A basic note taking board.
-[Here's a live demo!](http://stickynotes.benbowers.net)
+It features color selections, drag and drop, and reordering animations. 
+[Here's a demo!](https://codesandbox.io/s/sticky-notes-gbrrw)
