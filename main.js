@@ -3,28 +3,33 @@ document.ontouchmove = snapNoteTouch; //Logic for snapping to touch is slightly 
 document.onmouseup = placeNote; //When the mouse comes up, place the selected note where the user chose
 document.ontouchend = placeNote; //When the touch is released, place the note
 document.onmousedown = clearMenus; //Clear menus when the mouse is clicked to the side
+window.addEventListener('load', loadNotes); // When document has loaded, load any notes that are in local storage
+if ('onvisibilitychange' in document)
+    document.addEventListener('visibilitychange', storeNotes);
+else
+    window.addEventListener('pagehide', storeNotes);
 
 let notesCount = 0; //Used to give a unique id to each note
 
 /**
  * addNote creates a new sticky note and adds it to the document.
  */
-function addNote() {
+function addNote(title = '', content = '', color = '') {
     console.log('Add button pressed');
-
-    notesCount++;
 
     //Create note container
     let note = document.createElement('div');
     note.onmousedown = selectNote;
     note.ontouchstart = selectNote;
     note.className = 'note';
+    note.style.backgroundColor = color;
     
     //Create text input for note title
     let titleInput = document.createElement('textarea');
     titleInput.placeholder = 'Title';
     titleInput.className = 'note-title';
     titleInput.onkeydown = keyDown;
+    titleInput.value = title;
     note.appendChild(titleInput);
 
     //Create text box for the content of the note
@@ -32,6 +37,7 @@ function addNote() {
     textBox.placeholder = 'Write your note here'
     textBox.className = 'note-content';
     textBox.onkeydown = keyDown;
+    textBox.value = content;
     note.appendChild(textBox);
 
     //Create the option button for the note
@@ -43,7 +49,7 @@ function addNote() {
     note.appendChild(optionButton);
 
 
-    note.id = 'note' + notesCount;
+    note.id = ++notesCount;
 
     document.body.appendChild(note); //Add the note to the document
 
@@ -376,8 +382,6 @@ function setColor() {
     let newColor = this.style.backgroundColor;
     
     note.style.backgroundColor = newColor;
-    note.children[0].style.backgroundColor = newColor;
-    note.children[1].style.backgroundColor = newColor;
 }
 
 /**
@@ -493,4 +497,75 @@ function animateReorder(oldRects, duration) {
     }//End animateFrame
 
     animateFrame();
+}
+
+/**
+ * @typedef Note
+ * @type {object}
+ * @property {string} title
+ * @property {string} content
+ * @property {string} color
+ */
+class Note {
+    constructor(title = '', content = '', color = '') {
+        this.title = title;
+        this.content = content;
+        this.color = color;
+    }
+}
+
+/**
+ * storeNotes stores any notes that are on the
+ * screen in local storage
+ * 
+ * @returns {void}
+ */
+function storeNotes() {
+    /**
+     * @type {HTMLDivElement[]}
+     */
+    const noteElements = Array.from(document.getElementsByClassName('note'));
+    console.log(noteElements);
+
+    /**
+     * @type {Note[]}
+     */
+    const noteObjects = [];
+
+    noteElements.forEach((note) => {
+        noteObjects.push(new Note(
+            note.children[0].value, // Title
+            note.children[1].value, // Content
+            note.style.backgroundColor
+        ));
+    });
+
+    console.log(noteObjects);
+
+    localStorage.setItem('notes', JSON.stringify(noteObjects));
+}
+
+/**
+ * loadNotes gets the notes stored in localStorage,
+ * if there are any, and adds them to the document.
+ * 
+ * @returns {void}
+ */
+function loadNotes() {
+    const data = localStorage.getItem('notes');
+
+    if (data === null) return;
+
+    /**
+     * @type Note[]
+     */
+     const noteObjects = JSON.parse(data);
+     
+     noteObjects.forEach((note) => {
+         addNote(
+             note.title,
+             note.content,
+             note.color
+         );
+     })
 }

@@ -86,8 +86,8 @@ body {
  .note-title {
      width: 85%;
      height: 1.3em;
+     background-color: transparent;
      display: inline-block;
-     background-color: lightgoldenrodyellow;
      text-align: center;
      font-size: 24px;
      font-weight: 600;
@@ -100,7 +100,7 @@ body {
  .note-content {
      width: 90%;
      height: 100px;
-     background-color: lightgoldenrodyellow;
+     background-color: transparent;
      display: inline-block;
      resize: none;
      overflow: hidden;
