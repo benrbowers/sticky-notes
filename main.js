@@ -287,8 +287,6 @@ function copyNote(originalNote) {
     let color = originalNote.style.backgroundColor;
 
     noteCopy.style.backgroundColor = color;
-    noteCopy.children[0].style.backgroundColor = color;
-    noteCopy.children[1].style.backgroundColor = color;
 
     noteCopy.style.animationName = 'none'; //Remove fade-in animation
 
